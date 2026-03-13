@@ -12,4 +12,3 @@ class CustomApp(Flask):
 
 
 app = CustomApp("app")
-db.init_app(app)
