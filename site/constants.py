@@ -1,13 +1,15 @@
 from flask import Flask
-from database.db_cmds import Database
+from database.base import db
 
 
 class CustomApp(Flask):
     def __init__(self, *args, **kwargs):
         super(CustomApp, self).__init__(*args, **kwargs)
         self.logger.setLevel("DEBUG")
-        self.database: Database = Database()
         self.logger.debug("initializing app")
+
+        self.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../database/sqlite.db"
 
 
 app = CustomApp("app")
+db.init_app(app)
