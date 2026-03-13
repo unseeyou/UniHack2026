@@ -122,7 +122,7 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/14/c7/2531aca6ab7baa3774fde2dfc9c9dd6d5a42576a1013a93701bfdc402fdd/Flask-Principal-0.4.0.tar.gz", hash = "sha256:f5d6134b5caebfdbb86f32d56d18ee44b080876a27269560a96ea35f75c99453", size = 5452, upload-time = "2013-06-14T18:56:14.264Z" }
 
 [[package]]
-name = "flask-security"
+name = "flask-security-too"
 version = "5.7.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
@@ -135,9 +135,9 @@ dependencies = [
     { name = "markupsafe" },
     { name = "wtforms" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/36/46/26e032a1e24ad6e3f16112c94432a7ce6b41b2d50a46a89381f0a4c6bdb6/flask_security-5.7.1.tar.gz", hash = "sha256:3131289c5466c6c39ebe7414d03e1a3028388ee844de13a59d2e9dd4bd58e676", size = 717615, upload-time = "2025-11-23T15:55:36.569Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e1/68/f8a59409cbbce9b8ef1d30162d1e3f9ac16510655dde66587356369f5ea4/flask_security_too-5.7.1.tar.gz", hash = "sha256:fff0bdf5cde048b89736523dc061fabd308e074f0ece6dcca0c745555dab7b5a", size = 717869, upload-time = "2025-11-23T15:54:34.945Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6b/59/5efddbaaedd4b3b625e9050ea62a324d27e752896ceb17d474c168da8ae1/flask_security-5.7.1-py3-none-any.whl", hash = "sha256:62cccbb057b87f04236037576f7c17475ce8e643c75dbafa7b2067a58b2fee5b", size = 459073, upload-time = "2025-11-23T15:55:33.538Z" },
+    { url = "https://files.pythonhosted.org/packages/00/45/41a0f084a95b171d5c9e8820179e3aa1223bdc5c7c5842c2ef5c0cf467ed/flask_security_too-5.7.1-py3-none-any.whl", hash = "sha256:971772ca22a78a3f1971086fb11d6e30e0f7e7729a19f637de04b79873c28a54", size = 459110, upload-time = "2025-11-23T15:54:32.79Z" },
 ]
 
 [[package]]
@@ -336,7 +336,7 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "flask" },
-    { name = "flask-security" },
+    { name = "flask-security-too" },
     { name = "waitress" },
 ]
 
@@ -349,7 +349,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "flask", specifier = ">=3.1.3" },
-    { name = "flask-security", specifier = ">=5.7.1" },
+    { name = "flask-security-too", specifier = ">=5.7.1" },
     { name = "waitress", specifier = ">=3.0.2" },
 ]
 
