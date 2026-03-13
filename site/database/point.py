@@ -1,6 +1,7 @@
-from site.database.trip import Trip
+from database.trip import Trip
 from sqlalchemy.orm import Mapped, relationship
-from site.database.base import db
+from database.base import db
+
 
 class Point(db.Model):
     trip: Mapped["Trip"] = relationship(back_populates="points")
