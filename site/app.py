@@ -5,7 +5,7 @@ from flask import send_file, render_template
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", suburb = "Chatswood", road_type = "Quiet Street")
 
 
 @app.route("/manifest.json")
