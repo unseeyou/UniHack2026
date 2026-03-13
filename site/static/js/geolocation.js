@@ -5,6 +5,7 @@ function getLocation() {
     // Geolocation is not supported by this browser
     console.log("Geolocation is not supported by this browser.");
   }
+  return "e";
 }
 
 function showPosition(position) {
@@ -31,4 +32,21 @@ function showError(error) {
       console.error("An unknown error occurred.");
       break;
   }
+}
+
+let geoInterval = null;
+
+function enableGeo() {
+  // Prevent multiple intervals from starting
+  if (geoInterval) return;
+
+  // This runs getLocation every 2000ms (2 seconds)
+  geoInterval = setInterval(getLocation, 2000);
+  console.log("Geolocation polling enabled.");
+}
+
+function disableGeo() {
+  clearInterval(geoInterval);
+  geoInterval = null;
+  console.log("Geolocation polling disabled.");
 }
