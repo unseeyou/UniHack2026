@@ -34,8 +34,6 @@ class Database:
         conn = self.__create_connection()
         cursor = None
         try:
-            # check_same_thread is False because we've already verified
-            # the library is compiled with full thread-safety.
             cursor = conn.cursor()
             yield cursor
             conn.commit()
