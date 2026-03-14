@@ -1,3 +1,4 @@
+import { startTransition } from "react";
 import { getPosition, watchPosition } from "../geolocation.js";
 import { CenterOnUserController } from "../map/center_on_user.js";
 
@@ -46,6 +47,21 @@ watchPosition(
     }
 );
 
+let startOdometer = null;
+
+window.confirmStart = function confirmStart() {
+    const value = document.getElementById('odometer-input').value;
+
+    if (!value) return;
+    startOdometer = parseFloat(value);
+
+    bootstrap.Modal.getInstance(document.getElementById('odometer-modal')).hide();
+
+    startTrip();
+
+    bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('trip-stats')).show();
+}
+
 let timerIntervalId;
 
 window.startTrip = function startTrip() {
@@ -62,6 +78,9 @@ window.startTrip = function startTrip() {
 }
 
 window.stopTrip = function stopTrip() {
+    bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('trip-stats')).hide();
+
+
     document.getElementById("start-btn").hidden = false;
     document.getElementById("end-btn").hidden = true;
 
