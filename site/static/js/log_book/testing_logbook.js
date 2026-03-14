@@ -10,7 +10,6 @@ function get_all_trips() {
     .then(trips => {
         const listElement = document.getElementById("trips-list");
         
-        // Clear the list first so we don't double up
         listElement.innerHTML = '';
 
         if (trips.length === 0) {
@@ -18,7 +17,6 @@ function get_all_trips() {
             return;
         }
 
-        // Loop through each trip and create a list item
         trips.forEach(trip => {
             const li = document.createElement("li");
             
@@ -41,6 +39,5 @@ function get_all_trips() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-    // Code to run as soon as the DOM is ready
     get_all_trips();
 });

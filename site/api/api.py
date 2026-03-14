@@ -23,12 +23,11 @@ def get_all_trips():
     trips_data = []
 
     for trip in trips:
-        # Convert the list of Point objects into a list of dictionaries
         formatted_points = []
         for p in trip.points:
             formatted_points.append({
-                "lat": p.lat,   # Change these to match your 
-                "lng": p.lng,   # Point model's actual column names
+                "lat": p.lat,   
+                "lng": p.lng, 
                 "time": p.time.isoformat() if p.time else None
             })
 
@@ -36,7 +35,7 @@ def get_all_trips():
             "id": trip.id,
             "start": trip.start.isoformat() if trip.start else None,
             "end": trip.end.isoformat() if trip.end else None,
-            "points": formatted_points # Now it's a list of dicts!
+            "points": formatted_points
         })
 
     return jsonify(trips_data)
