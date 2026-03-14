@@ -1,7 +1,6 @@
-from flask import app
+from constants import app
 import requests
 from datetime import datetime
-from pprint import pprint
 from database.trip.conditions import WeatherConditionType
 
 def analyze_weather_code(weather_code: int) -> WeatherConditionType:

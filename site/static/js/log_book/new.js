@@ -9,13 +9,14 @@ const map = L.map('map', {
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
+    minZoom: 12,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
 const locationMarker = L.circleMarker([coords.latitude, coords.longitude]).addTo(map);
 const tripTrail = L.polyline([]).addTo(map);
 
-map.addControl(new CenterOnUserController(locationMarker));
+map.addControl(new CenterOnUserController(locationMarker, { position: "bottomright" }));
 
 /**
  * @type {{
@@ -48,8 +49,8 @@ watchPosition(
 let timerIntervalId;
 
 window.startTrip = function startTrip() {
-    document.getElementById("start-btn").disabled = true;
-    document.getElementById("end-btn").disabled = false;
+    document.getElementById("start-btn").hidden = true;
+    document.getElementById("end-btn").hidden = false;
 
     timerIntervalId = setInterval(updateTimer, 1000);
     updateTimer();
@@ -61,24 +62,29 @@ window.startTrip = function startTrip() {
 }
 
 window.stopTrip = function stopTrip() {
-    document.getElementById("start-btn").disabled = false;
-    document.getElementById("end-btn").disabled = true;
+    document.getElementById("start-btn").hidden = false;
+    document.getElementById("end-btn").hidden = true;
 
     clearInterval(timerIntervalId);
+
+    const body = JSON.stringify({
+        start: currentTrip.start,
+        end: new Date(),
+        points: currentTrip.points
+    });
+
+    currentTrip = null;
 
     fetch("/api/trip", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            start: currentTrip.start,
-            end: new Date(),
-            points: currentTrip.points
-        }),
+        body: body,
     }).then(response => {
         if (!response.ok) {
             // Handle non-successful responses (e.g., 404, 500)
             throw new Error('HTTP error ' + response.status);
         }
+
         return response.json(); // Parse the JSON response body
     })
     .then(data => {

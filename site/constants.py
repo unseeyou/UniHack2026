@@ -9,5 +9,10 @@ class CustomApp(Flask):
 
         self.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../database/sqlite.db"
 
+        self.config["CELERY"] = {
+            "broker_url": "db+sqlite:///../database/sqlite.db",
+            "backend_url": "db+sqlite:///../database/sqlite.db"
+        }
+
 
 app = CustomApp("app")

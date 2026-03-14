@@ -35,6 +35,17 @@
     color: #ff4444; /* Optional: different color for emphasis */
 }
 
+.icon-btn:hover {
+    background: #e0ddd8;
+}
+.icon-btn:active {
+    transform: scale(0.93);
+}
+
+.cta-btn {
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
 @keyframes feetanim {
     0% {
         opacity: 1;
