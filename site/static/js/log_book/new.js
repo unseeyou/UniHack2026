@@ -93,6 +93,9 @@ window.stopTrip = function stopTrip() {
     .catch((error) => {
         console.error('Error:', error); // Handle network errors or rejected promises
     });
+
+    // redirect to /log-book
+    window.location.href = "/log-book";
 }
 
 function updateTimer() {
