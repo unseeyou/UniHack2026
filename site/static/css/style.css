@@ -31,7 +31,7 @@
 }
 
 .right-foot {
-    animation-delay: 6s; 
+    animation-delay: 6s;
     color: #ff4444; /* Optional: different color for emphasis */
 }
 
@@ -53,6 +53,6 @@
     }
     100% {
         opacity: 1;
-        transform: translateX(100vw); 
+        transform: translateX(100vw);
     }
 }

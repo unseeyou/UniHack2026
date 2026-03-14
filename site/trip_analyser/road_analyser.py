@@ -19,7 +19,7 @@ def get_road_conditions(lat: float, lng: float) -> set[RoadConditionType]:
     except Exception as e:
         app.logger.exception(e)
         return []
-    
+
     # First element is closest element
     tags = data["elements"][0].get("tags", {})
 
@@ -29,20 +29,40 @@ def get_road_conditions(lat: float, lng: float) -> set[RoadConditionType]:
 
     conditions: set[RoadConditionType] = set()
 
-    unsealed_surfaces = set(map(lambda x: x.casefold(), ["unpaved", "gravel", "dirt", "sand", "earth", "ground", "compacted"]))
+    unsealed_surfaces = set(
+        map(
+            lambda x: x.casefold(),
+            ["unpaved", "gravel", "dirt", "sand", "earth", "ground", "compacted"],
+        )
+    )
     if surface in unsealed_surfaces:
         conditions.add(RoadConditionType.Unsealed)
 
-    sealed_surfaces = set(map(lambda x: x.casefold(), ["asphalt", "paved", "concrete", "bitumen", "paving_stones"]))
+    sealed_surfaces = set(
+        map(
+            lambda x: x.casefold(),
+            ["asphalt", "paved", "concrete", "bitumen", "paving_stones"],
+        )
+    )
     if surface in sealed_surfaces:
         conditions.add(RoadConditionType.Sealed)
 
     # High way types: ["motorway", "trunk", "motorway_link"]
-    main_road_highway_types = set(map(lambda x: x.casefold(), ["primary", "secondary", "primary_link", "secondary_link"]))
+    main_road_highway_types = set(
+        map(
+            lambda x: x.casefold(),
+            ["primary", "secondary", "primary_link", "secondary_link"],
+        )
+    )
     if highway_type in main_road_highway_types:
         conditions.add(RoadConditionType.MainRoad)
-    
-    quiet_street_highway_types = set(map(lambda x: x.casefold(), ["residential", "living_street", "tertiary", "tertiary_link"]))
+
+    quiet_street_highway_types = set(
+        map(
+            lambda x: x.casefold(),
+            ["residential", "living_street", "tertiary", "tertiary_link"],
+        )
+    )
     if highway_type in quiet_street_highway_types:
         conditions.add(RoadConditionType.QuietStreet)
 
@@ -50,7 +70,7 @@ def get_road_conditions(lat: float, lng: float) -> set[RoadConditionType]:
         conditions.add(RoadConditionType.MultiLaned)
 
     return conditions
-    
+
 
 # if __name__ == "__main__":
 #     print(get_road_conditions(-33.80434765065589, 151.1862909590549))

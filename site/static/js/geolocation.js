@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * @param {PositionOptions?=} options
  * @returns {Promise<GeolocationPosition>}
  */
@@ -8,10 +8,10 @@ export function getPosition(options) {
 }
 
 /**
- * 
- * @param {PositionCallback} callback 
- * @param {ErrorCallback?=} errorCallback 
- * @param {PositionOptions?=} options 
+ *
+ * @param {PositionCallback} callback
+ * @param {ErrorCallback?=} errorCallback
+ * @param {PositionOptions?=} options
  * @returns {{ cancel(): void }}
  */
 export function watchPosition(callback, errorCallback, options) {

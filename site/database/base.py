@@ -7,8 +7,3 @@ class Base(DeclarativeBase):
 
 
 db = SQLAlchemy(model_class=Base)
-
-import database.trip.analysis
-import database.trip.conditions
-import database.trip.point
-import database.trip.trip

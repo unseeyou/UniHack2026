@@ -4,6 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database.base import db
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from database.trip.analysis import Analysis
 
@@ -24,7 +25,7 @@ class RoadCondition(db.Model):
 
     type: Mapped[RoadConditionType]
 
-    
+
 class WeatherConditionType(StrEnum):
     Fine = "fine"
     Raining = "raining"
@@ -37,11 +38,13 @@ class WeatherCondition(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     analysis_id: Mapped[int] = mapped_column(ForeignKey("analysis.id"))
-    analysis: Mapped["Analysis | None"] = relationship(back_populates="weather_conditions")
+    analysis: Mapped["Analysis | None"] = relationship(
+        back_populates="weather_conditions"
+    )
 
     type: Mapped[WeatherConditionType]
 
-    
+
 class TrafficConditionType(StrEnum):
     Light = "light"
     Moderate = "moderate"
@@ -50,8 +53,10 @@ class TrafficConditionType(StrEnum):
 
 class TrafficCondition(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    
+
     analysis_id: Mapped[int] = mapped_column(ForeignKey("analysis.id"))
-    analysis: Mapped["Analysis | None"] = relationship(back_populates="traffic_conditions")
+    analysis: Mapped["Analysis | None"] = relationship(
+        back_populates="traffic_conditions"
+    )
 
     type: Mapped[TrafficConditionType]
