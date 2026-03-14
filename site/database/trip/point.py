@@ -4,10 +4,10 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database.base import db
 
-from typing import TYPE_CHECKING
+# from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from database.trip.trip import Trip
+# if TYPE_CHECKING:
+from database.trip.trip import Trip
 
 
 class Point(db.Model):
