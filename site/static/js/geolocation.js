@@ -1,5 +1,6 @@
 let watchID;
 let pathCoordinates;
+let startTime;
 
 function enableGeo() {
     // disable the start button
@@ -8,15 +9,16 @@ function enableGeo() {
     // enable the end button
     document.getElementById("end-btn").disabled = false;
 
-
     // This runs getLocation every 1000ms (1 second)
     pathCoordinates = [];
+
+    startTime = new Date();
 
     // This starts the tracking
     watchID = navigator.geolocation.watchPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        pathCoordinates.push({ lat: latitude, lng: longitude });
+        pathCoordinates.push({ time: new Date(), lat: latitude, lng: longitude });
 
         console.log("New point added to path:", latitude, longitude);
       },
@@ -27,6 +29,7 @@ function enableGeo() {
         maximumAge: 0
       }
     );
+
     console.log("Geolocation polling enabled.");
 }
 
@@ -43,14 +46,17 @@ function disableGeo() {
 
     console.log("Geolocation polling disabled.");
 
-    fetch("/backend/add-trip-location", {
+    fetch("/api/trip", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json', // Inform the server the body is JSON
         },
-        body: JSON.stringify(pathCoordinates),
-        }
-    ).then(response => {
+        body: JSON.stringify({
+            start: startTime,
+            end: new Date(),
+            points: pathCoordinates
+        }),
+    }).then(response => {
         if (!response.ok) {
             // Handle non-successful responses (e.g., 404, 500)
             throw new Error('HTTP error ' + response.status);

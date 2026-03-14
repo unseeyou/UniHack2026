@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database.base import db
@@ -14,5 +16,7 @@ class Point(db.Model):
     trip_id: Mapped[int] = mapped_column(ForeignKey("trip.id"))
     trip: Mapped["Trip"] = relationship(back_populates="points")
 
+    time: Mapped[datetime]
+
     lat: Mapped[float]
-    long: Mapped[float]
+    lng: Mapped[float]

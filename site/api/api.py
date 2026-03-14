@@ -1,12 +1,16 @@
 from flask import Blueprint, request
+from api.model.trip import AddTrip
+from database.base import db
+
+api = Blueprint("api", __name__)
+api.url_prefix = "/api"
 
 
-backend = Blueprint("api", __name__)
-backend.url_prefix = "/api"
-
-
-@backend.route("/trip", methods=["POST"])
+@api.route("/trip", methods=["POST"])
 def add_trip():
-    data = request.get_json()
-    print(data)
+    trip_model = AddTrip.model_validate_json(request.get_data())
+
+    db.session.add(trip_model.to_orm_obj())
+    db.session.commit()
+
     return {"success": True}
