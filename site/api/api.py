@@ -3,6 +3,7 @@ from api.model.trip import AddTrip
 from database.base import db
 from database.trip.analysis import Trip
 from flask import jsonify
+from datetime import timezone
 
 api = Blueprint("api", __name__, url_prefix="/api")
 
@@ -29,15 +30,21 @@ def get_all_trips():
                 {
                     "lat": p.lat,
                     "lng": p.lng,
-                    "time": p.time.isoformat() if p.time else None,
+                    "time": p.time.replace(tzinfo=timezone.utc).isoformat()
+                    if p.time
+                    else None,
                 }
             )
 
         trips_data.append(
             {
                 "id": trip.id,
-                "start": trip.start.isoformat() if trip.start else None,
-                "end": trip.end.isoformat() if trip.end else None,
+                "start": trip.start.replace(tzinfo=timezone.utc).isoformat()
+                if trip.start
+                else None,
+                "end": trip.end.replace(tzinfo=timezone.utc).isoformat()
+                if trip.end
+                else None,
                 "points": formatted_points,
             }
         )
