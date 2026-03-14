@@ -1,6 +1,13 @@
 import { getPosition, watchPosition } from "../geolocation.js";
 import { CenterOnUserController } from "../map/center_on_user.js";
 
+const tripStats = bootstrap.Offcanvas.getOrCreateInstance(document.getElementById("trip-stats"));
+const timer = document.getElementById("timer");
+const preStartModal = bootstrap.Modal.getOrCreateInstance(document.getElementById("pre-start-modal"));
+const odometerInput = document.getElementById("odometer-input");
+const startBtn = document.getElementById("start-btn");
+const endBtn = document.getElementById("end-btn");
+
 const coords = (await getPosition()).coords;
 const map = L.map('map', {
     center: [coords.latitude, coords.longitude],
@@ -21,10 +28,14 @@ map.addControl(new CenterOnUserController(locationMarker, { position: "bottomrig
 /**
  * @type {{
  *  start: Date,
- *  points: { lat: number, lng: number, time: Date }[]
- * } | null}
+ *  startOdometer: number,
+ *  points: { lat: number, lng: number, time: Date }[],
+ *  active: true
+ * } | { active: false }}
  */
-let currentTrip = null;
+let currentTrip = {
+    active: false
+};
 
 /** @type {GeolocationCoordinates} */
 let currentCoords = coords;
@@ -33,7 +44,7 @@ watchPosition(
     (position) => {
         const { latitude: lat, longitude: lng } = currentCoords = position.coords;
 
-        if (currentTrip != null) {
+        if (currentTrip.active) {
             currentTrip.points.push({ time: new Date(), lat, lng });
         }
 
@@ -46,58 +57,49 @@ watchPosition(
     }
 );
 
-let startOdometer = null;
 
-function confirmStart() {
-    const value = document.getElementById('odometer-input').value;
+window.preStartTrip = function preStartTrip() {
+    const startOdometer = odometerInput.valueAsNumber;
+    if (isNaN(startOdometer)) {
+        return;
+    }
 
-    if (!value) return;
-    startOdometer = parseFloat(value);
-
-    const modal = bootstrap.Modal.getInstance(document.getElementById('odometer-modal')).hide();
-    modal.hide();
-
-    document.getElementById('odometer-modal').addEventListener('hidden.bs.modal', function handler() {
-        this.removeEventListener('hidden.bs.modal', handler);
-
-        startTrip();
-        bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('trip-stats')).show();
-    });
+    startTrip(startOdometer);
 }
 
 let timerIntervalId;
 
-window.startTrip = function startTrip() {
-    document.getElementById("start-btn").hidden = true;
-    document.getElementById("end-btn").hidden = false;
+window.startTrip = function startTrip(startOdometer) {
+    startBtn.hidden = true;
+    endBtn.hidden = false;
+
+    currentTrip = {
+        start: new Date(),
+        startOdometer: startOdometer,
+        points: [],
+        active: true
+    }
 
     timerIntervalId = setInterval(updateTimer, 1000);
     updateTimer();
 
-    currentTrip = {
-        start: new Date(),
-        points: []
-    }
+    tripStats.show();
+    preStartModal.hide();
 }
 
-window.stopTrip = function stopTrip() {
-    bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('trip-stats')).hide();
-
-
-    document.getElementById("start-btn").hidden = false;
-    document.getElementById("end-btn").hidden = true;
+window.stopTrip = async function stopTrip() {
+    endBtn.disabled = true;
 
     clearInterval(timerIntervalId);
 
+    currentTrip.active = false;
     const body = JSON.stringify({
         start: currentTrip.start,
         end: new Date(),
         points: currentTrip.points
     });
 
-    currentTrip = null;
-
-    fetch("/api/trip", {
+    await fetch("/api/trip", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: body,
@@ -116,8 +118,13 @@ window.stopTrip = function stopTrip() {
         console.error('Error:', error); // Handle network errors or rejected promises
     });
 
+    endBtn.disabled = false;
+
+    startBtn.hidden = false;
+    endBtn.hidden = true;
+
     // redirect to /log-book
-    window.location.href = "/log-book";
+    // window.location.href = "/log-book";
 }
 
 function updateTimer() {
@@ -130,10 +137,10 @@ function updateTimer() {
     const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
     const secs = String(seconds % 60).padStart(2, '0');
 
-    document.getElementById("timer").textContent = `${hrs}:${mins}:${secs}`;
+    timer.textContent = `${hrs}:${mins}:${secs}`;
 }
 
 function updateMap() {
     locationMarker.setLatLng({ lat: currentCoords.latitude, lng: currentCoords.longitude });
-    tripTrail.setLatLngs(currentTrip?.points ?? []);
+    tripTrail.setLatLngs(currentTrip.points ?? []);
 }

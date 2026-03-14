@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="/static/js/log_book/new.js" type="module"></script>
+{% endblock %}
+
+{% block title %}{{ trip.analysis.name or "Trip" }}{% endblock %}
+
+{% block content %}
+<main class="vh-100 d-flex flex-column">
+    <h1>{{ trip.analysis.name or "Trip" }}</h1>
+
+    <div class="d-flex flex-lg-fill gap-2 p-2 align-items-stretch">
+        <div style="flex: 2">
+            <div id="map" class="h-100">
+                <div class="d-flex align-items-center justify-content-center h-100 text-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="flex: 1">
+            <div class="card-body">
+                <h5 class="card-title">Trip Info</h5>
+
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Date</th>
+                            <td>{{ trip.start.date() }}</td>
+                        </tr>
+
+                        <tr>
+                            <th scope="col">Start</th>
+                            <td>{{ "TODO" }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">End</th>
+                            <td>{{ "TODO" }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">GPS Point Count</th>
+                            <td>{{ trip.points|length }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">Locations</th>
+                            <td>{{ "TODO" }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">Road Type(s)</th>
+                            <td>{{ trip.analysis.road_conditions }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">Weather</th>
+                            <td>{{ trip.analysis.weather_conditions }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">Traffic</th>
+                            <td>{{ trip.analysis.traffic_conditions }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">Start Time</th>
+                            <td>{{ trip.start.time() }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">End Time</th>
+                            <td>{{ trip.end.time() }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">Time Day</th>
+                            <td>{{ trip.analysis.time_day }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">Time Night</th>
+                            <td>{{ trip.analysis.time_night }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</main>
+
+<script></script>
+{% endblock %}

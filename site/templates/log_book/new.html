@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="/static/js/log_book/new.js" type="module"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}
 
 {% block title %}Record New Trip{% endblock %}
@@ -26,10 +25,9 @@
 </h1>
 
 <div class="d-flex position-absolute bottom-0 start-0 end-0 m-4 gap-4">
-    <button id="start-btn" class="btn btn-success flex-fill" data-bs-toggle="modal" data-bs-target="#odometer-modal" onclick="startTrip()">Start Trip</button>
+    <button id="start-btn" class="btn btn-success flex-fill" data-bs-toggle="modal" data-bs-target="#pre-start-modal">Start Trip</button>
 
-    <!-- Odometer Input -->
-     <div class="modal fade" id="odometer-modal" tabindex="-1">
+     <div class="modal fade" id="pre-start-modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="border-radius: 1rem;">
 
@@ -44,7 +42,7 @@
 
                 <div class="model-footer" style="margin: 1rem;">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success" onclick="confirmStart()" style="margin-left: 0.67rem;">Confirm & Start</button>
+                    <button type="button" class="btn btn-success" onclick="preStartTrip()" style="margin-left: 0.67rem;">Confirm & Start</button>
                 </div>
                 
             </div>

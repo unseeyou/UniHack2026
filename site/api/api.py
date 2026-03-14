@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from api.model.trip import AddTrip
 from database.base import db
-from database.trip.analysis import Trip
+from database.trip.trip import Trip
 from flask import jsonify
 from datetime import timezone
 
@@ -18,7 +18,7 @@ def add_trip():
     return {"success": True}
 
 
-@api.route("/get_trips", methods=["GET"])
+@api.route("/trip/all", methods=["GET"])
 def get_all_trips():
     trips = Trip.query.all()
     trips_data = []

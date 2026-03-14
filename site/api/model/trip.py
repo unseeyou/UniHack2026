@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from database.trip.analysis import Trip, Point as DBPoint
+from database.trip.trip import Trip, Point as DBPoint
 
 
 class Point(BaseModel):

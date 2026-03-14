@@ -4,9 +4,7 @@
 
 {% block content %}
 
-<a href="/" class="btn btn-secondary">Back to Homepage</a>
-
-<h3>Past Trips</h3>
+<h3>Past Trips <a href="/" class="btn btn-secondary">Back to Homepage</a></h3>
 <table class="table">
     <thead>
         <tr>
@@ -16,16 +14,33 @@
             <th scope="col">GPS Point Count</th>
             <th scope="col">Locations</th>
             <th scope="col">Road Type(s)</th>
-            <th scope="col">Weather)</th>
+            <th scope="col">Weather</th>
             <th scope="col">Traffic</th>
-            <th scope="col">Time Start</th>
-            <th scope="col">Time End</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">End Time</th>
             <th scope="col">Time Day</th>
             <th scope="col">Time Night</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
-    <tbody id="trips-list"></tbody>
+    <tbody>
+        {% for trip in trips %}
+        <tr>
+            <td>{{ trip.start.date() }}</td>
+            <td></td>
+            <td></td>
+            <td>{{ trip.points|length }}</td>
+            <td></td>
+            <td>{{ trip.analysis.road_conditions }}</td>
+            <td>{{ trip.analysis.weather_conditions }}</td>
+            <td>{{ trip.analysis.traffic_conditions }}</td>
+            <td>{{ trip.start.time() }}</td>
+            <td>{{ trip.end.time() }}</td>
+            <td>{{ trip.analysis.time_day }}</td>
+            <td>{{ trip.analysis.time_night }}</td>
+            <td><a href="/log-book/trip/{{ trip.id }}">View</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
-
-<script src="/static/js/log_book/testing_logbook.js" type="module"></script>
 {% endblock %}
