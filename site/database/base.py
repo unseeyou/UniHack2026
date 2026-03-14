@@ -7,5 +7,3 @@ class Base(DeclarativeBase):
 
 
 db = SQLAlchemy(model_class=Base)
-
-from database.trip.trip import Trip
