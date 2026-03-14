@@ -19,7 +19,7 @@ def get_road_classification(
     try:
         response = requests.post(overpass_url, data={"data": query})
         data = response.json()
-        print(data["elements"])
+        # print(data["elements"])
 
         if not data.get("elements"):
             app.logger.warning("No road found at these coordinates.")
@@ -27,6 +27,7 @@ def get_road_classification(
 
         # Get tags from the first matching road element
         tags = data["elements"][0].get("tags", {})
+        # print(tags)
         hw = tags.get("highway", "").lower()
         surface = tags.get("surface", "").lower()
 

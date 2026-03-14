@@ -1,52 +1,66 @@
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, showError);
-  } else {
-    // Geolocation is not supported by this browser
-    console.log("Geolocation is not supported by this browser.");
-  }
-  return "e";
-}
-
-function showPosition(position) {
-  // Access latitude and longitude
-  const latitude = position.coords.latitude;
-  const longitude = position.coords.longitude;
-  console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-  // You can then use this data with mapping APIs like Google Maps or Leaflet.js
-}
-
-function showError(error) {
-  // Handle cases where the user denies permission or location cannot be found
-  switch(error.code) {
-    case error.PERMISSION_DENIED:
-      console.error("User denied the request for geolocation.");
-      break;
-    case error.POSITION_UNAVAILABLE:
-      console.error("Location information is unavailable.");
-      break;
-    case error.TIMEOUT:
-      console.error("The request to get user location timed out.");
-      break;
-    case error.UNKNOWN_ERROR:
-      console.error("An unknown error occurred.");
-      break;
-  }
-}
-
-let geoInterval = null;
+let watchID;
+let pathCoordinates;
 
 function enableGeo() {
-  // Prevent multiple intervals from starting
-  if (geoInterval) return;
+    // disable the start button
+    document.getElementById("start-btn").disabled = true;
 
-  // This runs getLocation every 2000ms (2 seconds)
-  geoInterval = setInterval(getLocation, 2000);
-  console.log("Geolocation polling enabled.");
+    // enable the end button
+    document.getElementById("end-btn").disabled = false;
+
+
+    // This runs getLocation every 1000ms (1 second)
+    pathCoordinates = [];
+
+    // This starts the tracking
+    watchID = navigator.geolocation.watchPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        pathCoordinates.push({ lat: latitude, lng: longitude });
+
+        console.log("New point added to path:", latitude, longitude);
+      },
+      (error) => console.error("Error tracking location:", error),
+      {
+        enableHighAccuracy: true, // Uses GPS instead of just Wi-Fi
+        timeout: 5000,
+        maximumAge: 0
+      }
+    );
+    console.log("Geolocation polling enabled.");
 }
 
 function disableGeo() {
-  clearInterval(geoInterval);
-  geoInterval = null;
-  console.log("Geolocation polling disabled.");
+    if (watchID) {
+        navigator.geolocation.clearWatch(watchID);
+    }
+
+    // enable the start button
+    document.getElementById("start-btn").disabled = false;
+
+    // disable the end button
+    document.getElementById("end-btn").disabled = true;
+
+    console.log("Geolocation polling disabled.");
+
+    fetch("/backend/add-trip-location", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json', // Inform the server the body is JSON
+        },
+        body: JSON.stringify(pathCoordinates),
+        }
+    ).then(response => {
+        if (!response.ok) {
+            // Handle non-successful responses (e.g., 404, 500)
+            throw new Error('HTTP error ' + response.status);
+        }
+        return response.json(); // Parse the JSON response body
+    })
+    .then(data => {
+        console.log('Success:', data); // Handle the successful response data
+    })
+    .catch((error) => {
+        console.error('Error:', error); // Handle network errors or rejected promises
+    });
 }

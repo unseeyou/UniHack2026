@@ -4,6 +4,7 @@ from database.base import db
 from database.trip.point import Point
 from database.trip.analysis import Analysis
 
+
 class Trip(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
 
