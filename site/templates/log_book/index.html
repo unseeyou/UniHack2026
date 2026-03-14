@@ -7,7 +7,25 @@
 <a href="/" class="btn btn-secondary">Back to Homepage</a>
 
 <h3>Past Trips</h3>
-<ul id="trips-list"></ul>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Start</th>
+            <th scope="col">End</th>
+            <th scope="col">GPS Point Count</th>
+            <th scope="col">Locations</th>
+            <th scope="col">Road Type(s)</th>
+            <th scope="col">Weather)</th>
+            <th scope="col">Traffic</th>
+            <th scope="col">Time Start</th>
+            <th scope="col">Time End</th>
+            <th scope="col">Time Day</th>
+            <th scope="col">Time Night</th>
+        </tr>
+    </thead>
+    <tbody id="trips-list"></tbody>
+</table>
 
 <script src="/static/js/log_book/testing_logbook.js" type="module"></script>
 {% endblock %}
