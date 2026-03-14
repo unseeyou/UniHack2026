@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database.base import db
+
 from database.trip.point import Point
 from database.trip.analysis import Analysis
 
