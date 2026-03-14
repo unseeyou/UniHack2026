@@ -1,29 +1,7 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
-
-
+{% block title %}TODO{% endblock %}
 
 {% block content %}
-<script src="/static/js/geolocation.js" onload="disableGeo()"></script>
-
-<div>
-    <h1>NSW Learner Logbook</h1>
-
-    <div id="trip-stats">
-        <p>Suburb: <span id="suburb">{{ suburb | default('--') }}</span></p>
-        <p>Road Type: <span id="road-type">{{ road_type | default('--') }}</span></p>
-        <p>Time: <span id="timer">00:00:00</span></p>
-    </div>
-
-    <button id="start-btn" onclick="enableGeo()">Start Trip</button>
-    <button id="end-btn" onclick="disableGeo()">End Trip</button>
-
-</div>
-
-<script>
-    // todo: implement a frontend timer logic
-    // just start coutning when stat-btn is clicked and stop/reset when end-btn clicked
-    // not too sure how it works but try save start time and end time
-</script>
+<a href="/log-book/new">Add log entry</a>
 {% endblock %}

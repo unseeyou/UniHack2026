@@ -2,8 +2,7 @@ from flask import Blueprint, request
 from api.model.trip import AddTrip
 from database.base import db
 
-api = Blueprint("api", __name__)
-api.url_prefix = "/api"
+api = Blueprint("api", __name__, url_prefix="/api")
 
 
 @api.route("/trip", methods=["POST"])

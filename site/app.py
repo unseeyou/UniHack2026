@@ -1,12 +1,14 @@
+from flask import send_file, render_template
+
 from constants import app
 from database.base import db
-from flask import send_file, render_template
 from api.api import api
+from log_book.log_book import log_book
 
 
 @app.route("/")
 def index():
-    return render_template("index.html", suburb="Chatswood", road_type="Quiet Street")
+    return render_template("index.html")
 
 
 @app.route("/manifest.json")
@@ -21,6 +23,7 @@ def serve_sw():
 
 if __name__ == "__main__":
     app.register_blueprint(api)
+    app.register_blueprint(log_book)
     db.init_app(app)
 
     with app.app_context():
