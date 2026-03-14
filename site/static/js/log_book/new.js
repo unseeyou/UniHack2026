@@ -1,4 +1,3 @@
-import { startTransition } from "react";
 import { getPosition, watchPosition } from "../geolocation.js";
 import { CenterOnUserController } from "../map/center_on_user.js";
 
@@ -49,7 +48,7 @@ watchPosition(
 
 let startOdometer = null;
 
-window.confirmStart = function confirmStart() {
+function confirmStart() {
     const value = document.getElementById('odometer-input').value;
 
     if (!value) return;
