@@ -55,11 +55,15 @@ window.confirmStart = function confirmStart() {
     if (!value) return;
     startOdometer = parseFloat(value);
 
-    bootstrap.Modal.getInstance(document.getElementById('odometer-modal')).hide();
+    const modal = bootstrap.Modal.getInstance(document.getElementById('odometer-modal')).hide();
+    modal.hide();
 
-    startTrip();
+    document.getElementById('odometer-modal').addEventListener('hidden.bs.modal', function handler() {
+        this.removeEventListener('hidden.bs.modal', handler);
 
-    bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('trip-stats')).show();
+        startTrip();
+        bootstrap.Offcanvas.getOrCreateInstance(document.getElementById('trip-stats')).show();
+    });
 }
 
 let timerIntervalId;
