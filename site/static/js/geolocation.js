@@ -1,6 +1,8 @@
 let watchID;
 let pathCoordinates;
 let startTime;
+let seconds = 0;
+let timerInterval;
 
 function enableGeo() {
     // disable the start button
@@ -13,6 +15,7 @@ function enableGeo() {
     pathCoordinates = [];
 
     startTime = new Date();
+    timerInterval = setInterval(updateTimer, 1000);
 
     // This starts the tracking
     watchID = navigator.geolocation.watchPosition(
@@ -46,6 +49,8 @@ function disableGeo() {
 
     console.log("Geolocation polling disabled.");
 
+    clearInterval(timerInterval);
+
     fetch("/api/trip", {
         method: 'POST',
         headers: {
@@ -69,4 +74,15 @@ function disableGeo() {
     .catch((error) => {
         console.error('Error:', error); // Handle network errors or rejected promises
     });
+}
+
+function updateTimer() {
+    seconds++;
+
+    // Format the seconds into HH:MM:SS
+    const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+
+    document.getElementById("timer").textContent = `${hrs}:${mins}:${secs}`;
 }
