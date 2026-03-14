@@ -1,7 +1,6 @@
 from constants import app
 from database.base import db
 from flask import send_file, render_template
-from blueprints import collate_data
 
 
 @app.route("/")
@@ -20,7 +19,8 @@ def serve_sw():
 
 
 if __name__ == "__main__":
-    app.register_blueprint(collate_data.backend)
+    db.init_app(app)
+
     with app.app_context():
         db.create_all()
 
