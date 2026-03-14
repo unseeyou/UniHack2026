@@ -1,6 +1,6 @@
 import requests
 from constants import app
-from database.trip.conditions import RoadConditionType
+from database.trip.analysis import RoadConditionType
 
 
 def get_road_conditions(lat: float, lng: float) -> set[RoadConditionType]:

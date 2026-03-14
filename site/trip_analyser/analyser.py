@@ -1,6 +1,4 @@
-from database.trip.trip import Trip
-from database.trip.analysis import Analysis
-from database.trip.conditions import RoadCondition
+from database.trip.analysis import Analysis, RoadCondition, Trip
 from trip_analyser.road_analyser import get_road_conditions
 from celery_app import celery_app
 from database.base import db

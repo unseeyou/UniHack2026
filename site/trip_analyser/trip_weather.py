@@ -1,7 +1,7 @@
 from constants import app
 import requests
 from datetime import datetime
-from database.trip.conditions import WeatherConditionType
+from database.trip.analysis import WeatherConditionType
 from pprint import pprint
 
 
