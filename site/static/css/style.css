@@ -1,0 +1,47 @@
+::selection {
+  background: #6540c9; /* sets the highlight background color to purple */
+  color: #dbda91;        /* sets the selected text color to white */
+}
+
+.page-title {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    margin-top: 9vh;
+    text-decoration: underline;
+}
+
+.fun-quote {
+    font-family: cursive;
+    margin-top: 3vh;
+}
+
+.feet-container {
+    position: fixed;
+    bottom: 2vh;
+    width: 100%;
+    padding-bottom: 4vh;
+}
+
+.foot {
+    position: absolute;
+    display: inline-block;
+    white-space: nowrap;
+    animation: feetanim 12s linear infinite;
+    font-size: x-large;
+    opacity: 0;
+}
+
+.right-foot {
+    animation-delay: 6s; 
+    color: #ff4444; /* Optional: different color for emphasis */
+}
+
+@keyframes feetanim {
+    0% {
+        opacity: 1;
+        transform: translateX(-100vw);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(100vw); 
+    }
+}

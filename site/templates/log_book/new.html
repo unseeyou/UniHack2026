@@ -1,19 +1,30 @@
 {% extends "base.html" %}
 
-{% block title %}Add Log Entry{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+{% endblock %}
+
+{% block title %}Record New Trip{% endblock %}
 
 {% block content %}
-<script src="/static/js/geolocation.js" onload="disableGeo()"></script>
-
-<div>
-    <h1>NSW Learner Logbook</h1>
-
-    <div id="trip-stats">
-        <p>Time: <span id="timer">00:00:00</span></p>
+<div id="map" class="position-absolute top-0 bottom-0 start-0 end-0 z-n1">
+    <div class="d-flex align-items-center justify-content-center h-100 text-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
-
-    <button id="start-btn" onclick="enableGeo()">Start Trip</button>
-    <button id="end-btn" onclick="disableGeo()">End Trip</button>
-
 </div>
+
+<h1 id="trip-stats" class="d-inline offcanvas offcanvas-top text-center mx-auto bg-light rounded-bottom-4 p-3" style="width: fit-content; height: fit-content"
+    data-bs-scroll="true" data-bs-backdrop="false">
+    Time Elapsed <span id="timer">00:00:00</span>
+</h1>
+
+<div class="d-flex position-absolute bottom-0 start-0 end-0 m-4 gap-4">
+    <button id="start-btn" class="btn btn-success flex-fill" data-bs-toggle="offcanvas" data-bs-target="#trip-stats" onclick="startTrip()">Start Trip</button>
+    <button id="end-btn" class="btn btn-danger flex-fill" data-bs-dismiss="offcanvas" data-bs-target="#trip-stats" onclick="stopTrip()" disabled>End Trip</button>
+</div>
+
+<script src="/static/js/log_book/new.js" type="module"></script>
 {% endblock %}

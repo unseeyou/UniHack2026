@@ -9,6 +9,7 @@ dependencies = [
     "flask-security-too>=5.7.1",
     "flask-sqlalchemy>=3.1.1",
     "pydantic>=2.12.5",
+    "pyopenssl>=25.3.0",
     "requests>=2.32.5",
     "waitress>=3.0.2",
 ]
