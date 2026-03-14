@@ -9,7 +9,7 @@ function get_all_trips() {
     })
     .then(trips => {
         const listElement = document.getElementById("trips-list");
-        
+
         listElement.innerHTML = '';
 
         if (trips.length === 0) {
@@ -19,7 +19,7 @@ function get_all_trips() {
 
         trips.forEach(trip => {
             const li = document.createElement("li");
-            
+
             // Format the date nicely
             const startDate = new Date(trip.start).toLocaleString();
             const pointCount = trip.points ? trip.points.length : 0;
@@ -29,7 +29,7 @@ function get_all_trips() {
                 <span>${pointCount} GPS points collected</span>
                 <hr>
             `;
-            
+
             listElement.appendChild(li);
         });
     })
