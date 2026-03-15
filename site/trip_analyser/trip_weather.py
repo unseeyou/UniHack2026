@@ -1,8 +1,8 @@
 from constants import app
 import requests
 from datetime import datetime
-from database.trip.analysis import WeatherConditionType
-from pprint import pprint
+from database.trip.conditions import WeatherConditionType
+from database.trip.trip import Point
 
 
 def analyze_weather_code(weather_code: int) -> WeatherConditionType:
@@ -24,37 +24,34 @@ def analyze_weather_code(weather_code: int) -> WeatherConditionType:
         return WeatherConditionType.Fog
 
 
-def get_trip_weather(date: str, lat: float, long: float) -> WeatherConditionType:
-    current_date = datetime.fromisoformat(date).date()
+def get_weather_conditions(points: list[Point]):
+    return set(map(get_point_weather, points))
+
+
+def get_point_weather(point: Point) -> WeatherConditionType:
     params = {
-        "latitude": lat,
-        "longitude": long,
-        "start_date": current_date,
-        "end_date": current_date,
+        "latitude": point.lat,
+        "longitude": point.lng,
+        "start_date": point.time.date(),
+        "end_date": point.time.date(),
         "daily": "weather_code",
         "hourly": "temperature_2m,weather_code",
         "timezone": "Australia/Sydney",
     }
 
     try:
-        response = requests.get(
-            "https://archive-api.open-meteo.com/v1/archive", params=params
-        )
+        response = requests.get("https://archive-api.open-meteo.com/v1/archive", params=params)
         data = response.json()
 
         hourly_data = data.get("hourly")
 
         for index, time in enumerate(hourly_data.get("time")):
-            # Todo: Change this later to use the datetime module
-            if time == date[:16]:
+            time = datetime.fromisoformat(time)
+            if time >= point.time:
                 weather_code = hourly_data.get("weather_code")[index]
                 return analyze_weather_code(weather_code)
 
-        return -1
+        return WeatherConditionType.Fine
     except Exception as e:
         app.logger.exception(e)
-        return -1.0, -1.0
-
-
-if __name__ == "__main__":
-    pprint(get_trip_weather("2026-03-13T10:00:00", -33.8688, 151.2093))
+        return WeatherConditionType.Fine

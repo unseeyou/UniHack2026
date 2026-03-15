@@ -25,6 +25,15 @@ class RoadCondition(db.Model):
 
     type: Mapped[RoadConditionType]
 
+    @property
+    def symbol(self) -> str:
+        match self.type:
+            case RoadConditionType.Sealed: return "S"
+            case RoadConditionType.Unsealed: return "U"
+            case RoadConditionType.QuietStreet: return "QS"
+            case RoadConditionType.MainRoad: return "MR"
+            case RoadConditionType.MultiLaned: return "ML"
+
 
 class WeatherConditionType(StrEnum):
     Fine = "fine"
@@ -42,6 +51,15 @@ class WeatherCondition(db.Model):
 
     type: Mapped[WeatherConditionType]
 
+    @property
+    def symbol(self) -> str:
+        match self.type:
+            case WeatherConditionType.Fine: return "F"
+            case WeatherConditionType.Raining: return "R"
+            case WeatherConditionType.Snow: return "S"
+            case WeatherConditionType.Icy: return "I"
+            case WeatherConditionType.Fog: return "FG"
+
 
 class TrafficConditionType(StrEnum):
     Light = "light"
@@ -56,3 +74,10 @@ class TrafficCondition(db.Model):
     analysis: Mapped["Analysis | None"] = relationship(back_populates="traffic_conditions", lazy="joined")
 
     type: Mapped[TrafficConditionType]
+
+    @property
+    def symbol(self) -> str:
+        match self.type:
+            case TrafficConditionType.Light: return "L"
+            case TrafficConditionType.Moderate: return "M"
+            case TrafficConditionType.Heavy: return "H"

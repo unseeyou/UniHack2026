@@ -4,14 +4,13 @@
 
 {% block content %}
 
-<h3>Past Trips <a href="/" class="btn btn-secondary">Back to Homepage</a></h3>
+<h3 style="padding-top: 0.25rem;"><span class="display-6" id="tit">Past Trips</span> <a href="/" class="btn btn-secondary">Back to Homepage</a></h3>
 <table class="table">
     <thead>
         <tr>
             <th scope="col">Date</th>
             <th scope="col">Start</th>
             <th scope="col">End</th>
-            <th scope="col">GPS Point Count</th>
             <th scope="col">Locations</th>
             <th scope="col">Road Type(s)</th>
             <th scope="col">Weather</th>
@@ -26,21 +25,35 @@
     <tbody>
         {% for trip in trips %}
         <tr>
-            <td>{{ trip.start.date() }}</td>
-            <td></td>
-            <td></td>
-            <td>{{ trip.points|length }}</td>
-            <td></td>
-            <td>{{ trip.analysis.road_conditions }}</td>
-            <td>{{ trip.analysis.weather_conditions }}</td>
-            <td>{{ trip.analysis.traffic_conditions }}</td>
-            <td>{{ trip.start.time() }}</td>
-            <td>{{ trip.end.time() }}</td>
+            <td><time datetime="{{ trip.start }}" dateonly>{{ trip.start.date() }}</time></td>
+            <td>{{ trip.odometer_start }}</td>
+            <td>{{ trip.odometer_end }}</td>
+            <td>[locations]</td>
+            <td>{{ trip.analysis.road_conditions|map(attribute="symbol")|join(", ") }}</td>
+            <td>{{ trip.analysis.weather_conditions|map(attribute="symbol")|join(", ") }}</td>
+            <td>{{ trip.analysis.traffic_conditions|map(attribute="symbol")|join(", ") }}</td>
+            <td><time datetime="{{ trip.start }}" timeonly>{{ trip.start.time() }}</time></td>
+            <td><time datetime="{{ trip.end }}" timeonly>{{ trip.end.time() }}</time></td>
             <td>{{ trip.analysis.time_day }}</td>
             <td>{{ trip.analysis.time_night }}</td>
-            <td><a href="/log-book/trip/{{ trip.id }}">View</a></td>
+            <td>
+                <a href="/log-book/trip/{{ trip.id }}" class="btn btn-primary"><i class="fa-solid fa-eye"></i></a>
+
+                {% if trip.analysis == None %}
+                <form action="/api/trip/{{ trip.id }}/analyse" method="post">
+                    <button class="btn btn-outline-secondary"><i class="fa-solid fa-magnifying-glass-location"></i></button>
+                </form>
+                {% else %}
+                <form action="/api/trip/{{ trip.id }}/analyse" method="post">
+                    <button class="btn btn-outline-secondary" disabled><i class="fa-solid fa-magnifying-glass-location"></i></button>
+                </form>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<script src="/static/js/log_book/index.js"></script>
+<script src="/static/js/translate_time.js"></script>
 {% endblock %}

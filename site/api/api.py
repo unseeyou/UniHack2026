@@ -1,9 +1,10 @@
-from flask import Blueprint, request
+from flask import Blueprint, Response, redirect, request
 from api.model.trip import AddTrip
 from database.base import db
 from database.trip.trip import Trip
 from flask import jsonify
 from datetime import timezone
+import trip_analyser.analyser as analyser
 
 api = Blueprint("api", __name__, url_prefix="/api")
 
@@ -11,42 +12,21 @@ api = Blueprint("api", __name__, url_prefix="/api")
 @api.route("/trip", methods=["POST"])
 def add_trip():
     trip_model = AddTrip.model_validate_json(request.get_data())
+    trip = trip_model.to_orm_obj()
 
-    db.session.add(trip_model.to_orm_obj())
+    db.session.add(trip)
     db.session.commit()
 
-    return {"success": True}
+    return jsonify({})
 
 
-@api.route("/trip/all", methods=["GET"])
-def get_all_trips():
-    trips = Trip.query.all()
-    trips_data = []
+@api.route("/trip/<int:trip_id>/analyse", methods=["POST"])
+def analyse_trip(trip_id: int):
+    trip = db.get_or_404(Trip, trip_id)
 
-    for trip in trips:
-        formatted_points = []
-        for p in trip.points:
-            formatted_points.append(
-                {
-                    "lat": p.lat,
-                    "lng": p.lng,
-                    "time": p.time.replace(tzinfo=timezone.utc).isoformat()
-                    if p.time
-                    else None,
-                }
-            )
+    if (trip.analysis is not None):
+        return redirect(f"/log-book/trip/{trip_id}")
 
-        trips_data.append(
-            {
-                "id": trip.id,
-                "start": trip.start.replace(tzinfo=timezone.utc).isoformat()
-                if trip.start
-                else None,
-                "end": trip.end.replace(tzinfo=timezone.utc).isoformat()
-                if trip.end
-                else None,
-                "points": formatted_points,
-            }
-        )
+    analyser.analyse(trip)
 
-    return jsonify(trips_data)
+    return redirect(f"/log-book/trip/{trip_id}")

@@ -5,7 +5,6 @@
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="/static/js/log_book/new.js" type="module"></script>
 {% endblock %}
 
 {% block title %}{{ trip.analysis.name or "Trip" }}{% endblock %}
@@ -33,16 +32,16 @@
                     <tbody>
                         <tr>
                             <th scope="row">Date</th>
-                            <td>{{ trip.start.date() }}</td>
+                            <td><time datetime="{{ trip.start }}" dateonly>{{ trip.start.date() }}</time></td>
                         </tr>
 
                         <tr>
-                            <th scope="col">Start</th>
-                            <td>{{ "TODO" }}</td>
+                            <th scope="col">Odometer Start</th>
+                            <td>{{ trip.odometer_start }}</td>
                         </tr>
                         <tr>
-                            <th scope="col">End</th>
-                            <td>{{ "TODO" }}</td>
+                            <th scope="col">Odometer End</th>
+                            <td>{{ trip.odometer_end }}</td>
                         </tr>
                         <tr>
                             <th scope="col">GPS Point Count</th>
@@ -54,23 +53,23 @@
                         </tr>
                         <tr>
                             <th scope="col">Road Type(s)</th>
-                            <td>{{ trip.analysis.road_conditions }}</td>
+                            <td>{{ trip.analysis.road_conditions|map(attribute="symbol")|join(", ") }}</td>
                         </tr>
                         <tr>
                             <th scope="col">Weather</th>
-                            <td>{{ trip.analysis.weather_conditions }}</td>
+                            <td>{{ trip.analysis.weather_conditions|map(attribute="symbol")|join(", ") }}</td>
                         </tr>
                         <tr>
                             <th scope="col">Traffic</th>
-                            <td>{{ trip.analysis.traffic_conditions }}</td>
+                            <td>{{ trip.analysis.traffic_conditions|map(attribute="symbol")|join(", ") }}</td>
                         </tr>
                         <tr>
                             <th scope="col">Start Time</th>
-                            <td>{{ trip.start.time() }}</td>
+                            <td><time datetime="{{ trip.start }}" timeonly>{{ trip.start.time() }}</time></td>
                         </tr>
                         <tr>
                             <th scope="col">End Time</th>
-                            <td>{{ trip.end.time() }}</td>
+                            <td><time datetime="{{ trip.end }}" timeonly>{{ trip.end.time() }}</time></td>
                         </tr>
                         <tr>
                             <th scope="col">Time Day</th>
@@ -84,7 +83,18 @@
                 </table>
             </div>
         </div>
+    </div>
+
+    <x-trip id="points" hidden>
+        {% for point in trip.points %}
+        <x-point>
+            <x-lat>{{ point.lat }}</x-lat>
+            <x-lng>{{ point.lng }}</x-lng>
+        </x-point>
+        {% endfor %}
+    </x-trip>
 </main>
 
-<script></script>
+<script src="/static/js/log_book/trip.js"></script>
+<script src="/static/js/translate_time.js"></script>
 {% endblock %}

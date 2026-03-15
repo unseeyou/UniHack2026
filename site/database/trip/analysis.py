@@ -5,7 +5,6 @@ from database.base import db
 from database.trip.conditions import RoadCondition, WeatherCondition, TrafficCondition
 
 from typing import TYPE_CHECKING
-
 if TYPE_CHECKING:
     from database.trip.trip import Trip
 
@@ -18,9 +17,9 @@ class Analysis(db.Model):
 
     name: Mapped[str | None]
 
-    road_conditions: Mapped[set["RoadCondition"]] = relationship(back_populates="analysis", lazy="joined")
-    weather_conditions: Mapped[set["WeatherCondition"]] = relationship(back_populates="analysis", lazy="joined")
-    traffic_conditions: Mapped[set["TrafficCondition"]] = relationship(back_populates="analysis", lazy="joined")
+    road_conditions: Mapped[set["RoadCondition"]] = relationship(back_populates="analysis", lazy="joined", cascade="all")
+    weather_conditions: Mapped[set["WeatherCondition"]] = relationship(back_populates="analysis", lazy="joined", cascade="all")
+    traffic_conditions: Mapped[set["TrafficCondition"]] = relationship(back_populates="analysis", lazy="joined", cascade="all")
 
     time_day: Mapped[timedelta]
     time_night: Mapped[timedelta]

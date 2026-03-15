@@ -14,12 +14,17 @@ class AddTrip(BaseModel):
     start: datetime
     end: datetime
 
+    odometer_start: float
+    odometer_end: float
+
     points: list[Point]
 
     def to_orm_obj(self) -> Trip:
-        return Trip(
+        trip = Trip(
             start=self.start,
             end=self.end,
+            odometer_start=self.odometer_start,
+            odometer_end=self.odometer_end,
             points=list(
                 map(
                     lambda point: DBPoint(
@@ -29,3 +34,5 @@ class AddTrip(BaseModel):
                 )
             ),
         )
+
+        return trip

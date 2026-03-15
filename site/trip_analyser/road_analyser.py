@@ -1,15 +1,25 @@
 import requests
 from constants import app
-from database.trip.analysis import RoadConditionType
+from database.trip.trip import Point
+from database.trip.conditions import RoadConditionType
 
 
-def get_road_conditions(lat: float, lng: float) -> set[RoadConditionType]:
+def get_road_conditions(points: list[Point]) -> set[RoadConditionType]:
+    road_conditions = set()
+
+    for point in points:
+        road_conditions = road_conditions.union(get_point_road_conditions(point))
+
+    return road_conditions
+
+
+def get_point_road_conditions(point: Point) -> set[RoadConditionType]:
     overpass_url = "https://overpass.thepyes.au/api/interpreter"
 
     # Query finds the nearest 'way' with a 'highway' tag within 20m
     query = f"""
     [out:json];
-    way(around:20, {lat}, {lng})[highway];
+    way(around:20, {point.lat}, {point.lng})[highway];
     out tags;
     """
 
@@ -18,6 +28,7 @@ def get_road_conditions(lat: float, lng: float) -> set[RoadConditionType]:
         data = response.json()
     except Exception as e:
         app.logger.exception(e)
+        print(response.content)
         return []
 
     # First element is closest element
@@ -25,7 +36,7 @@ def get_road_conditions(lat: float, lng: float) -> set[RoadConditionType]:
 
     highway_type = tags.get("highway", "").casefold()
     surface = tags.get("surface", "").casefold()
-    num_lanes = tags.get("lanes", 1).casefold()
+    num_lanes = int(tags.get("lanes", 1))
 
     conditions: set[RoadConditionType] = set()
 

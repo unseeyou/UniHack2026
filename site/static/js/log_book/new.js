@@ -4,7 +4,10 @@ import { CenterOnUserController } from "../map/center_on_user.js";
 const tripStats = bootstrap.Offcanvas.getOrCreateInstance(document.getElementById("trip-stats"));
 const timer = document.getElementById("timer");
 const preStartModal = bootstrap.Modal.getOrCreateInstance(document.getElementById("pre-start-modal"));
+const preEndModal = bootstrap.Modal.getOrCreateInstance(document.getElementById("pre-end-modal"));
 const odometerInput = document.getElementById("odometer-input");
+const odometerEndInput = document.getElementById("odometer-end-input");
+const odometerEndFeedback = document.getElementById("odometer-end-feedback");
 const startBtn = document.getElementById("start-btn");
 const endBtn = document.getElementById("end-btn");
 
@@ -57,6 +60,10 @@ watchPosition(
     }
 );
 
+preEndModal._element.addEventListener("show.bs.modal", () => {
+    odometerEndInput.value = "";
+    odometerEndInput.classList.remove("is-invalid");
+});
 
 window.preStartTrip = function preStartTrip() {
     const startOdometer = odometerInput.valueAsNumber;
@@ -67,9 +74,26 @@ window.preStartTrip = function preStartTrip() {
     startTrip(startOdometer);
 }
 
-let timerIntervalId;
+window.preEndTrip = async function preEndTrip() {
+    const endOdometer = odometerEndInput.valueAsNumber;
+    if (isNaN(endOdometer)) {
+        return;
+    }
+    
+    if (endOdometer < currentTrip.startOdometer) {
+        odometerEndFeedback.textContent = `Must be at least ${currentTrip.startOdometer} km`;
+        odometerEndInput.classList.add("is-invalid");
+        return;
+    }
 
-window.startTrip = function startTrip(startOdometer) {
+    odometerEndInput.classList.remove("is-invalid");
+    stopTrip(endOdometer);
+}
+
+let timerIntervalId;
+let wakeLock;
+
+window.startTrip = async function startTrip(startOdometer) {
     startBtn.hidden = true;
     endBtn.hidden = false;
 
@@ -85,19 +109,26 @@ window.startTrip = function startTrip(startOdometer) {
 
     tripStats.show();
     preStartModal.hide();
+
+    wakeLock = await navigator.wakeLock.request("screen");
 }
 
-window.stopTrip = async function stopTrip() {
+window.stopTrip = async function stopTrip(endOdometer) {
     endBtn.disabled = true;
 
     clearInterval(timerIntervalId);
+    wakeLock?.release();
 
     currentTrip.active = false;
     const body = JSON.stringify({
-        start: currentTrip.start,
-        end: new Date(),
+        start: currentTrip.start.toISOString(),
+        end: new Date().toISOString(),
+        odometer_start: currentTrip.startOdometer,
+        odometer_end: endOdometer,
         points: currentTrip.points
     });
+
+    preEndModal.hide();
 
     await fetch("/api/trip", {
         method: 'POST',
@@ -109,22 +140,19 @@ window.stopTrip = async function stopTrip() {
             throw new Error('HTTP error ' + response.status);
         }
 
-        return response.json(); // Parse the JSON response body
+        return response.json();
     })
     .then(data => {
-        console.log('Success:', data); // Handle the successful response data
+        console.log('Success:', data);
     })
     .catch((error) => {
-        console.error('Error:', error); // Handle network errors or rejected promises
+        console.error('Error:', error);
     });
 
     endBtn.disabled = false;
 
     startBtn.hidden = false;
     endBtn.hidden = true;
-
-    // redirect to /log-book
-    // window.location.href = "/log-book";
 }
 
 function updateTimer() {
