@@ -7,6 +7,8 @@ from database.trip.conditions import RoadConditionType
 def get_road_conditions(points: list[Point]) -> set[RoadConditionType]:
     road_conditions = set()
 
+    points = points[:: max(1, len(points) // 10)]  # Sample up to 10 points for efficiency
+
     for point in points:
         road_conditions = road_conditions.union(get_point_road_conditions(point))
 
@@ -14,7 +16,7 @@ def get_road_conditions(points: list[Point]) -> set[RoadConditionType]:
 
 
 def get_point_road_conditions(point: Point) -> set[RoadConditionType]:
-    overpass_url = "https://overpass.thepyes.au/api/interpreter"
+    overpass_url = "https://maps.mail.ru/osm/tools/overpass/api/interpreter" # "https://overpass.thepyes.au/api/interpreter"
 
     # Query finds the nearest 'way' with a 'highway' tag within 20m
     query = f"""
@@ -79,6 +81,8 @@ def get_point_road_conditions(point: Point) -> set[RoadConditionType]:
 
     if num_lanes > 2:
         conditions.add(RoadConditionType.MultiLaned)
+
+    print(f"Point: {point.lat}, {point.lng} - Conditions: {conditions}")
 
     return conditions
 

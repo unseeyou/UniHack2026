@@ -20,4 +20,4 @@ def new_log():
 @log_book.route("/trip/<int:trip_id>")
 def view_trip(trip_id: int):
     trip = db.get_or_404(Trip, trip_id)
-    return render_template("log_book/trip.html", trip=trip)
+    return render_template("log_book/trip.html", trip=trip) 

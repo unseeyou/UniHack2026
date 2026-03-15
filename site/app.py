@@ -6,6 +6,20 @@ from database.trip.trip import Trip
 from api.api import api
 from log_book.log_book import log_book
 from datetime import timedelta
+from zoneinfo import ZoneInfo
+
+@app.template_filter('sydney_time')
+def sydney_time_filter(dt):
+    if dt is None:
+        return ""
+    
+    utc_tz = ZoneInfo("UTC")
+    sydney_tz = ZoneInfo("Australia/Sydney")
+    
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=utc_tz)
+    
+    return dt.astimezone(sydney_tz)
 
 
 @app.route("/")
@@ -16,10 +30,12 @@ def index():
     day_time = sum(map(lambda trip: trip.analysis.time_day, analysed_trips), timedelta())
     night_time = sum(map(lambda trip: trip.analysis.time_night, analysed_trips), timedelta())
 
-    hours_logged = round(day_time.total_seconds() / 3600, 1)
-    night_hours_logged = round(night_time.total_seconds() / 3600, 1)
+    day_time_hours_logged = round(day_time.total_seconds() / 3600, 2)
+    night_hours_logged = round(night_time.total_seconds() / 3600, 2)
 
-    return render_template("index.html", trips=trips, hours_logged=hours_logged, night_hours_logged=night_hours_logged)
+    total_hours_logged = day_time_hours_logged + night_hours_logged
+
+    return render_template("index.html", trips=trips, hours_logged=total_hours_logged, night_hours_logged=night_hours_logged)
 
 
 @app.route("/manifest.json")

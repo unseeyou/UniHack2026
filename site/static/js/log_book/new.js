@@ -63,6 +63,23 @@ watchPosition(
 preEndModal._element.addEventListener("show.bs.modal", () => {
     odometerEndInput.value = "";
     odometerEndInput.classList.remove("is-invalid");
+    
+    // Pause the timer
+    clearInterval(timerIntervalId);
+    pauseStartTime = new Date();
+});
+
+preEndModal._element.addEventListener("hide.bs.modal", (event) => {
+    // Only resume if the modal is being hidden without confirmation
+    // (i.e., not when stopTrip() called preEndModal.hide())
+    if (currentTrip.active) {
+        totalPausedDuration += new Date().getTime() - pauseStartTime.getTime();
+        pauseStartTime = null;
+        
+        // Resume the timer
+        timerIntervalId = setInterval(updateTimer, 1000);
+        updateTimer();
+    }
 });
 
 window.preStartTrip = function preStartTrip() {
@@ -88,10 +105,14 @@ window.preEndTrip = async function preEndTrip() {
 
     odometerEndInput.classList.remove("is-invalid");
     stopTrip(endOdometer);
+
+    window.location.href = "/log-book";
 }
 
 let timerIntervalId;
 let wakeLock;
+let totalPausedDuration = 0;
+let pauseStartTime = null;
 
 window.startTrip = async function startTrip(startOdometer) {
     startBtn.hidden = true;
@@ -104,6 +125,8 @@ window.startTrip = async function startTrip(startOdometer) {
         active: true
     }
 
+    totalPausedDuration = 0;
+    pauseStartTime = null;
     timerIntervalId = setInterval(updateTimer, 1000);
     updateTimer();
 
@@ -158,7 +181,7 @@ window.stopTrip = async function stopTrip(endOdometer) {
 function updateTimer() {
     if (currentTrip == null) return;
 
-    const seconds = Math.floor((new Date().getTime() - currentTrip.start.getTime()) / 1000);
+    const seconds = Math.floor((new Date().getTime() - currentTrip.start.getTime() - totalPausedDuration) / 1000);
 
     // Format the seconds into HH:MM:SS
     const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');

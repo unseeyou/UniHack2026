@@ -7,84 +7,112 @@
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 {% endblock %}
 
-{% block title %}{{ trip.analysis.name or "Trip" }}{% endblock %}
+{% block title %}{{ trip.analysis.name or "Trip" }} {{trip.start.date()}}{% endblock %}
 
 {% block content %}
-<main class="vh-100 d-flex flex-column">
-    <h1>{{ trip.analysis.name or "Trip" }}</h1>
 
-    <div class="d-flex flex-lg-fill gap-2 p-2 align-items-stretch">
-        <div style="flex: 2">
-            <div id="map" class="h-100">
-                <div class="d-flex align-items-center justify-content-center h-100 text-center">
-                    <div class="spinner-border" role="status">
+<!-- Top bar -->
+<div class="nsw-topbar d-flex justify-content-between">
+    <span><i class="fa fa-location-dot me-1"></i> NSW</span>
+    <span>Team Snack Overflow · UniHack 2026</span>
+</div>
+
+<!-- Header -->
+<div class="nsw-header d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+        <i class="fa fa-map me-2" style="color: var(--nsw-brand-accent); font-size: 1.4rem;"></i>
+        <h1>{{ trip.analysis.name or "Trip" }} {{trip.start.date()}}</h1>
+    </div>
+    <a href="/log-book/" class="btn btn-outline-secondary btn-sm">
+        <i class="fa fa-arrow-left me-1"></i> Back
+    </a>
+</div>
+
+<main class="d-flex flex-column px-4 py-4" style="height: calc(100vh - 7rem);">
+
+    <div class="d-flex flex-lg-row flex-column gap-3 h-100">
+
+        <!-- Map -->
+        <div style="flex: 2; min-height: 300px;">
+            <div id="map" class="h-100 w-100" style="border-radius: 0.5rem; overflow: hidden;">
+                <div class="d-flex align-items-center justify-content-center h-100">
+                    <div class="spinner-border" role="status" style="color: var(--nsw-brand-dark);">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="card" style="flex: 1">
-            <div class="card-body">
-                <h5 class="card-title">Trip Info</h5>
+        <!-- Trip info -->
+        <div style="flex: 1; overflow-y: auto;">
+            <p class="fw-semibold mb-2" style="color: var(--nsw-brand-dark);">Trip Details</p>
+            <hr class="nsw-divider mt-0">
 
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <th scope="row">Date</th>
-                            <td><time datetime="{{ trip.start }}" dateonly>{{ trip.start.date() }}</time></td>
-                        </tr>
+            <table class="table table-sm align-middle">
+                <tbody>
+                    <tr>
+                        <th class="text-muted fw-normal" style="width: 50%;">Date</th>
+                        <td>{{ trip.start.date() }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted fw-normal">Start Time</th>
+                        <td>{{ (trip.start | sydney_time).strftime('%H:%M') }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted fw-normal">End Time</th>
+                        <td>{{ (trip.end | sydney_time).strftime('%H:%M') }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted fw-normal">Odo Start</th>
+                        <td>{{ trip.odometer_start | default('--') }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted fw-normal">Odo End</th>
+                        <td>{{ trip.odometer_end | default('--') }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted fw-normal">GPS Points</th>
+                        <td>{{ trip.points | length }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted fw-normal">Locations</th>
+                        <td>{{ trip.analysis.name }}</td>
+                    </tr>
 
-                        <tr>
-                            <th scope="col">Odometer Start</th>
-                            <td>{{ trip.odometer_start }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="col">Odometer End</th>
-                            <td>{{ trip.odometer_end }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="col">GPS Point Count</th>
-                            <td>{{ trip.points|length }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="col">Locations</th>
-                            <td>{{ "TODO" }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="col">Road Type(s)</th>
-                            <td>{{ trip.analysis.road_conditions|map(attribute="symbol")|join(", ") }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="col">Weather</th>
-                            <td>{{ trip.analysis.weather_conditions|map(attribute="symbol")|join(", ") }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="col">Traffic</th>
-                            <td>{{ trip.analysis.traffic_conditions|map(attribute="symbol")|join(", ") }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="col">Start Time</th>
-                            <td><time datetime="{{ trip.start }}" timeonly>{{ trip.start.time() }}</time></td>
-                        </tr>
-                        <tr>
-                            <th scope="col">End Time</th>
-                            <td><time datetime="{{ trip.end }}" timeonly>{{ trip.end.time() }}</time></td>
-                        </tr>
-                        <tr>
-                            <th scope="col">Time Day</th>
-                            <td>{{ trip.analysis.time_day }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="col">Time Night</th>
-                            <td>{{ trip.analysis.time_night }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                    {% if trip.analysis %}
+                    <tr>
+                        <th class="text-muted fw-normal">Road Types</th>
+                        <td>{{ trip.analysis.road_conditions | map(attribute='symbol') | join(', ') }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted fw-normal">Weather</th>
+                        <td>{{ trip.analysis.weather_conditions | map(attribute='symbol') | join(', ') }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted fw-normal">Traffic</th>
+                        <td>{{ trip.analysis.traffic_conditions | map(attribute='symbol') | join(', ') }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted fw-normal">Day Hours</th>
+                        <td>{{ "%.2f"|format(trip.analysis.time_day.total_seconds() / 3600) }}</td>
+                    </tr>
+                    <tr>
+                        <th class="text-muted fw-normal">Night Hours</th>
+                        <td>{{ "%.2f"|format(trip.analysis.time_night.total_seconds() / 3600) }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2" class="text-muted fst-italic">
+                            <i class="fa fa-clock me-1"></i> Pending analysis
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
     </div>
 
+    <!-- Hidden GPS points for JS -->
     <x-trip id="points" hidden>
         {% for point in trip.points %}
         <x-point>
@@ -93,8 +121,10 @@
         </x-point>
         {% endfor %}
     </x-trip>
+
 </main>
 
 <script src="/static/js/log_book/trip.js"></script>
 <script src="/static/js/translate_time.js"></script>
+
 {% endblock %}

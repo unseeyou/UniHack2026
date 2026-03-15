@@ -132,6 +132,10 @@ body {
     font-family: 'Public Sans', sans-serif;
 }
 
+.smol-text {
+    font-size: 0.85rem;
+}
+
 /* Feet — rem based, works on all screens */
 .feet-container {
     position: fixed;

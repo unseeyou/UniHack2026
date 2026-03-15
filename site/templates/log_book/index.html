@@ -4,56 +4,97 @@
 
 {% block content %}
 
-<h3 style="padding-top: 0.25rem;"><span class="display-6" id="tit">Past Trips</span> <a href="/" class="btn btn-secondary">Back to Homepage</a></h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Date</th>
-            <th scope="col">Start</th>
-            <th scope="col">End</th>
-            <th scope="col">Locations</th>
-            <th scope="col">Road Type(s)</th>
-            <th scope="col">Weather</th>
-            <th scope="col">Traffic</th>
-            <th scope="col">Start Time</th>
-            <th scope="col">End Time</th>
-            <th scope="col">Time Day</th>
-            <th scope="col">Time Night</th>
-            <th scope="col">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for trip in trips %}
-        <tr>
-            <td><time datetime="{{ trip.start }}" dateonly>{{ trip.start.date() }}</time></td>
-            <td>{{ trip.odometer_start }}</td>
-            <td>{{ trip.odometer_end }}</td>
-            <td>[locations]</td>
-            <td>{{ trip.analysis.road_conditions|map(attribute="symbol")|join(", ") }}</td>
-            <td>{{ trip.analysis.weather_conditions|map(attribute="symbol")|join(", ") }}</td>
-            <td>{{ trip.analysis.traffic_conditions|map(attribute="symbol")|join(", ") }}</td>
-            <td><time datetime="{{ trip.start }}" timeonly>{{ trip.start.time() }}</time></td>
-            <td><time datetime="{{ trip.end }}" timeonly>{{ trip.end.time() }}</time></td>
-            <td>{{ trip.analysis.time_day }}</td>
-            <td>{{ trip.analysis.time_night }}</td>
-            <td>
-                <a href="/log-book/trip/{{ trip.id }}" class="btn btn-primary"><i class="fa-solid fa-eye"></i></a>
+<!-- Top bar -->
+<div class="nsw-topbar d-flex justify-content-between">
+    <span><i class="fa fa-location-dot me-1"></i> NSW</span>
+    <span>Team Snack Overflow · UniHack 2026</span>
+</div>
 
-                {% if trip.analysis == None %}
-                <form action="/api/trip/{{ trip.id }}/analyse" method="post">
-                    <button class="btn btn-outline-secondary"><i class="fa-solid fa-magnifying-glass-location"></i></button>
-                </form>
-                {% else %}
-                <form action="/api/trip/{{ trip.id }}/analyse" method="post">
-                    <button class="btn btn-outline-secondary" disabled><i class="fa-solid fa-magnifying-glass-location"></i></button>
-                </form>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<!-- Header -->
+<div class="nsw-header d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+        <i class="fa fa-list me-2" style="color: var(--nsw-brand-accent); font-size: 1.4rem;"></i>
+        <h1>Past Trips</h1>
+    </div>
+    <a href="/" class="btn btn-outline-secondary btn-sm smol-text">
+        <i class="fa fa-arrow-left me-1"></i> Back
+    </a>
+</div>
+
+<main class="px-4 py-4">
+
+    {% if trips %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr style="border-bottom: 2px solid var(--nsw-brand-dark); color: var(--nsw-brand-dark);">
+                    <th>Date</th>
+                    <th>Odo Start</th>
+                    <th>Odo End</th>
+                    <th>Locations</th>
+                    <th>Road Types</th>
+                    <th>Weather</th>
+                    <th>Traffic</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Day Hrs</th>
+                    <th>Night Hrs</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trip in trips %}
+                <tr>
+                    <td>{{ trip.start.date() }}</td>
+                    <td>{{ trip.odometer_start | default('--') }}</td>
+                    <td>{{ trip.odometer_end | default('--') }}</td>
+                    <td>{{ trip.analysis.name }}</td>
+
+                    {% if trip.analysis %}
+                        <td>{{ trip.analysis.road_conditions | map(attribute='symbol') | join(', ') }}</td>
+                        <td>{{ trip.analysis.weather_conditions | map(attribute='symbol') | join(', ') }}</td>
+                        <td>{{ trip.analysis.traffic_conditions | map(attribute='symbol') | join(', ') }}</td>
+                        <td>{{ (trip.start | sydney_time).strftime('%H:%M') }}</td>
+                        <td>{{ (trip.end | sydney_time).strftime('%H:%M') }}</td>
+                        <td>{{ (trip.analysis.time_day.total_seconds() / 3600) | round(2) }}hrs</td>
+                        <td>{{ (trip.analysis.time_night.total_seconds() / 3600) | round(2) }}hrs</td>
+                    {% else %}
+                        <td colspan="7" class="text-muted fst-italic">
+                            <i class="fa fa-clock me-1"></i> Pending analysis
+                        </td>
+                    {% endif %}
+
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a href="/log-book/trip/{{ trip.id }}" class="btn btn-primary btn-sm">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                            <form action="/api/trip/{{ trip.id }}/analyse" method="post">
+                                <button class="btn btn-outline-secondary btn-sm" {% if trip.analysis %}disabled{% endif %}>
+                                    <i class="fa-solid fa-magnifying-glass-location"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fa fa-car fa-3x mb-3" style="color: var(--nsw-brand-light);"></i>
+        <p class="text-muted">No trips recorded yet.</p>
+        <a href="/log-book/new" class="btn btn-primary mt-2">
+            <i class="fa fa-play me-2"></i> Start Your First Trip
+        </a>
+    </div>
+    {% endif %}
+
+</main>
 
 <script src="/static/js/log_book/index.js"></script>
 <script src="/static/js/translate_time.js"></script>
+
 {% endblock %}

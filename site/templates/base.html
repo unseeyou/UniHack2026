@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}NSW Logbook{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='icons/icon_144x144.png') }}" type="image/x-icon">
 
     <!-- PWA manifest -->
     <link rel="manifest" href="/manifest.json">
@@ -25,10 +26,10 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <button style="position: fixed; top: 10px; right: 10px" onclick="logs.hidden = !logs.hidden" class="btn btn-secondary">Show Logs</button>
+    <button style="position: fixed; top: 10px; right: 10px" onclick="logs.hidden = !logs.hidden" class="btn btn-secondary" hidden>Show Logs</button>
     <div id="logs" style="position: fixed; top: 50px; left: 50px; right: 50px; bottom: 50px; background: black; z-index: 100000; overflow: auto" class="card" hidden>
         <h1 class="card-title">Logs</h1>
-    </div>
+    </div>  
 
     <script src="{{ url_for('static', filename='js/log.js') }}"></script>
 
