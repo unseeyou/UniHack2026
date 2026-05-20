@@ -1,8 +1,8 @@
-from flask import Blueprint, Response, redirect, request
+from flask import Blueprint, Response, redirect, request, jsonify
+from flask_security import auth_required
 from api.model.trip import AddTrip
 from database.base import db
 from database.trip.trip import Trip
-from flask import jsonify
 from datetime import timezone
 import trip_analyser.analyser as analyser
 
@@ -10,6 +10,7 @@ api = Blueprint("api", __name__, url_prefix="/api")
 
 
 @api.route("/trip", methods=["POST"])
+@auth_required()
 def add_trip():
     trip_model = AddTrip.model_validate_json(request.get_data())
     trip = trip_model.to_orm_obj()
@@ -21,10 +22,11 @@ def add_trip():
 
 
 @api.route("/trip/<int:trip_id>/analyse", methods=["POST"])
+@auth_required()
 def analyse_trip(trip_id: int):
     trip = db.get_or_404(Trip, trip_id)
 
-    if (trip.analysis is not None):
+    if trip.analysis is not None:
         return redirect(f"/log-book/trip/{trip_id}")
 
     analyser.analyse(trip)

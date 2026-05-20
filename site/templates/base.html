@@ -26,10 +26,25 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
+    <!-- Top bar -->
+    <div class="nsw-topbar d-flex justify-content-between">
+        <span><i class="fa fa-location-dot me-1"></i> NSW</span>
+        <div class="d-flex gap-3">
+            {% if current_user.is_authenticated %}
+                <span><i class="fa fa-user me-1"></i> {{ current_user.email }}</span>
+                <a href="/logout" class="text-white text-decoration-none"><i class="fa fa-sign-out me-1"></i> Logout</a>
+            {% else %}
+                <a href="/login" class="text-white text-decoration-none"><i class="fa fa-sign-in me-1"></i> Login</a>
+                <a href="/register" class="text-white text-decoration-none"><i class="fa fa-user-plus me-1"></i> Register</a>
+            {% endif %}
+            <span>Team Snack Overflow · UniHack 2026</span>
+        </div>
+    </div>
+
     <button style="position: fixed; top: 10px; right: 10px" onclick="logs.hidden = !logs.hidden" class="btn btn-secondary" hidden>Show Logs</button>
     <div id="logs" style="position: fixed; top: 50px; left: 50px; right: 50px; bottom: 50px; background: black; z-index: 100000; overflow: auto" class="card" hidden>
         <h1 class="card-title">Logs</h1>
-    </div>  
+    </div>
 
     <script src="{{ url_for('static', filename='js/log.js') }}"></script>
 
