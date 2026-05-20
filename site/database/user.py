@@ -3,6 +3,7 @@ from flask_security import UserMixin, RoleMixin
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, DateTime
 from typing import List
+from datetime import datetime
 
 
 class RolesUsers(db.Model):
@@ -24,5 +25,10 @@ class User(db.Model, UserMixin):
     password: Mapped[str]
     active: Mapped[bool] = mapped_column(default=True)
     fs_uniquifier: Mapped[str] = mapped_column(unique=True, nullable=False)
-    confirmed_at: Mapped[DateTime | None] = mapped_column(DateTime())
+    confirmed_at: Mapped[datetime | None] = mapped_column(DateTime())
+    last_login_at: Mapped[datetime | None] = mapped_column(DateTime())
+    current_login_at: Mapped[datetime | None] = mapped_column(DateTime())
+    last_login_ip: Mapped[str | None] = mapped_column()
+    current_login_ip: Mapped[str | None] = mapped_column()
+    login_count: Mapped[int | None] = mapped_column()
     roles: Mapped[List[Role]] = relationship(secondary="roles_users", backref="users")
