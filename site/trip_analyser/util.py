@@ -1,5 +1,4 @@
 from database.trip.trip import Point
-from datetime import datetime
 from zoneinfo import ZoneInfo
 
 

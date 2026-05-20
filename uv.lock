@@ -385,7 +385,7 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/14/c7/2531aca6ab7baa3774fde2dfc9c9dd6d5a42576a1013a93701bfdc402fdd/Flask-Principal-0.4.0.tar.gz", hash = "sha256:f5d6134b5caebfdbb86f32d56d18ee44b080876a27269560a96ea35f75c99453", size = 5452, upload-time = "2013-06-14T18:56:14.264Z" }
 
 [[package]]
-name = "flask-security"
+name = "flask-security-too"
 version = "5.8.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
@@ -398,9 +398,9 @@ dependencies = [
     { name = "markupsafe" },
     { name = "wtforms" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/2f/1f/ffd67a759e70ee39a316796e62290e06701e76b087d6fc85d9fb7e048c1b/flask_security-5.8.0.tar.gz", hash = "sha256:7296feec06d9046d61fefbbb3fccd4bd3387a244e3715594e8f277e1baf65024", size = 750028, upload-time = "2026-04-15T01:47:01.369Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f3/67/8fe3ad73fd82609975cfea2c65e5e490b19ff8349e5653d5f5db1e013581/flask_security_too-5.8.0.tar.gz", hash = "sha256:4f72e5a7e6ee5eaafc20a89f2510407eefa0614cc695ac469d19f9dbaa4b6c43", size = 750314, upload-time = "2026-04-15T01:48:55.741Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/17/fa/cdc0bed0522681f0f37abcd9ba885fd429c44d6303a024afe32621bd7843/flask_security-5.8.0-py3-none-any.whl", hash = "sha256:7d823755b5d111c8529cb106c076f25923ad8c3402131d48242615d6687f8779", size = 491768, upload-time = "2026-04-15T01:46:59.17Z" },
+    { url = "https://files.pythonhosted.org/packages/ef/a9/1dffc0358f24c7952adfecfadf1c5a577449c94e24fd64d01d90647bceb2/flask_security_too-5.8.0-py3-none-any.whl", hash = "sha256:f4bc8fb4b1c8a6f33bcd72ee698c9c2db0bc9406b1a211bb6d5dd6204bad6c53", size = 491804, upload-time = "2026-04-15T01:48:53.565Z" },
 ]
 
 [[package]]
@@ -418,16 +418,16 @@ wheels = [
 
 [[package]]
 name = "flask-wtf"
-version = "1.2.2"
+version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "flask" },
     { name = "itsdangerous" },
     { name = "wtforms" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/80/9b/f1cd6e41bbf874f3436368f2c7ee3216c1e82d666ff90d1d800e20eb1317/flask_wtf-1.2.2.tar.gz", hash = "sha256:79d2ee1e436cf570bccb7d916533fa18757a2f18c290accffab1b9a0b684666b", size = 42641, upload-time = "2024-10-24T07:18:58.555Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/91/f1/605a56d4ea217b307f3e6f4d663e0351253d85d841edc93ba559f0648e19/flask_wtf-1.3.0.tar.gz", hash = "sha256:61d5dabc50c3df885c297dcbd80810443a5d632106c8a69cab8ce740f0cdd7cc", size = 50414, upload-time = "2026-04-23T07:41:55.096Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dc/19/354449145fbebb65e7c621235b6ad69bebcfaec2142481f044d0ddc5b5c5/flask_wtf-1.2.2-py3-none-any.whl", hash = "sha256:e93160c5c5b6b571cf99300b6e01b72f9a101027cab1579901f8b10c5daf0b70", size = 12779, upload-time = "2024-10-24T07:18:56.976Z" },
+    { url = "https://files.pythonhosted.org/packages/14/d2/97adf2ec7af95522573e6dd5493ee84792d0fbfb2def010c4a581b8d6e5e/flask_wtf-1.3.0-py3-none-any.whl", hash = "sha256:dc5e3a4ce97f75c47bf6c1c72ad2c3b7bdf579a2ed13aebcc5d3d81fe2571160", size = 13959, upload-time = "2026-04-23T07:41:53.828Z" },
 ]
 
 [[package]]
@@ -875,7 +875,7 @@ dependencies = [
     { name = "bcrypt" },
     { name = "celery", extra = ["redis"] },
     { name = "flask" },
-    { name = "flask-security" },
+    { name = "flask-security-too" },
     { name = "flask-sqlalchemy" },
     { name = "pydantic" },
     { name = "pyopenssl" },
@@ -895,7 +895,7 @@ requires-dist = [
     { name = "bcrypt", specifier = ">=5.0.0" },
     { name = "celery", extras = ["redis"], specifier = ">=5.6.2" },
     { name = "flask", specifier = ">=3.1.3" },
-    { name = "flask-security", specifier = ">=5.8.0" },
+    { name = "flask-security-too", specifier = ">=5.8.0" },
     { name = "flask-sqlalchemy", specifier = ">=3.1.1" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pyopenssl", specifier = ">=25.3.0" },
@@ -975,12 +975,12 @@ wheels = [
 
 [[package]]
 name = "wtforms"
-version = "3.2.1"
+version = "3.2.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "markupsafe" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/01/e4/633d080897e769ed5712dcfad626e55dbd6cf45db0ff4d9884315c6a82da/wtforms-3.2.1.tar.gz", hash = "sha256:df3e6b70f3192e92623128123ec8dca3067df9cfadd43d59681e210cfb8d4682", size = 137801, upload-time = "2024-10-21T11:34:00.108Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e9/91/ed9b517da898e3fb747566aa3c12a734bd64ea7449a0d25ec74ce8f8b8eb/wtforms-3.2.2.tar.gz", hash = "sha256:7b00c73f8670f35d4edb0293dcd81b980528bee72fd662b182aaba27ae570b93", size = 139583, upload-time = "2026-05-03T05:53:44.147Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/08/c9/2088fb5645cd289c99ebe0d4cdcc723922a1d8e1beaefb0f6f76dff9b21c/wtforms-3.2.1-py3-none-any.whl", hash = "sha256:583bad77ba1dd7286463f21e11aa3043ca4869d03575921d1a1698d0715e0fd4", size = 152454, upload-time = "2024-10-21T11:33:58.44Z" },
+    { url = "https://files.pythonhosted.org/packages/18/76/bb225c8300f3a0ba28e01df51419c6c9574a297c43d71b29048e03b65deb/wtforms-3.2.2-py3-none-any.whl", hash = "sha256:72b90d5d921bd3119252069cf0301e9c13915f9e52792652bc91c5dda4b79e56", size = 158656, upload-time = "2026-05-03T05:53:46.072Z" },
 ]

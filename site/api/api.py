@@ -1,9 +1,8 @@
-from flask import Blueprint, Response, redirect, request, jsonify
+from flask import Blueprint, redirect, request, jsonify
 from flask_security import auth_required
 from api.model.trip import AddTrip
 from database.base import db
 from database.trip.trip import Trip
-from datetime import timezone
 import trip_analyser.analyser as analyser
 
 api = Blueprint("api", __name__, url_prefix="/api")
