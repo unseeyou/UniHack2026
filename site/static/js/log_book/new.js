@@ -104,7 +104,7 @@ window.preEndTrip = async function preEndTrip() {
     }
 
     odometerEndInput.classList.remove("is-invalid");
-    stopTrip(endOdometer);
+    await stopTrip(endOdometer);
 
     window.location.href = "/log-book";
 }

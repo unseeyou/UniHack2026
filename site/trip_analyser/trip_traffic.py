@@ -13,6 +13,8 @@ def total_time(points: list[Point]) -> timedelta:
     return total_time
 
 def trip_traffic_analysis(points: list[Point]) -> TrafficConditionType:
+    if len(points) < 2:
+        return TrafficConditionType.Light
     starting_point = points[0]
     ending_point = points[-1]
     middle_point = points[math.floor(len(points) / 2)]
