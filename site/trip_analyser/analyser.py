@@ -2,7 +2,7 @@ from database.trip.trip import Trip
 from database.trip.analysis import Analysis
 from database.trip.conditions import RoadCondition, WeatherCondition, TrafficCondition
 from trip_analyser.util import reduce_with_distance, fix_time_zone
-from trip_analyser.road_analyser import get_road_conditions
+from trip_analyser.road_analyser_fast import get_road_conditions
 from trip_analyser.trip_weather import get_weather_conditions
 from trip_analyser.trip_time import calculate_day_night_time
 from trip_analyser.trip_traffic import trip_traffic_analysis

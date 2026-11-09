@@ -4,7 +4,11 @@ from database.trip.trip import Point
 
 
 def get_start_end_locations(points: list[Point]) -> str:
-    api_key = '69b6142a622ed232090579rdg86e969'
+    api_key = '69b6142a622ed232090579rdg86e969'  # AYOOOOOO WHO DID THIS
+
+    if len(points) < 2:
+        return "Nowhere"
+
     starting_point = points[0]
     ending_point = points[-1]
 

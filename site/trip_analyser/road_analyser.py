@@ -1,4 +1,6 @@
 import requests
+import time
+
 from constants import app
 from database.trip.trip import Point
 from database.trip.conditions import RoadConditionType
@@ -11,30 +13,43 @@ def get_road_conditions(points: list[Point]) -> set[RoadConditionType]:
 
     for point in points:
         road_conditions = road_conditions.union(get_point_road_conditions(point))
+        time.sleep(1)
 
     return road_conditions
 
 
 def get_point_road_conditions(point: Point) -> set[RoadConditionType]:
     overpass_url = "https://maps.mail.ru/osm/tools/overpass/api/interpreter" # "https://overpass.thepyes.au/api/interpreter"
-
     # Query finds the nearest 'way' with a 'highway' tag within 20m
     query = f"""
-    [out:json];
+    [out:json][timeout:10];
     way(around:20, {point.lat}, {point.lng})[highway];
     out tags;
     """
 
+    user_agent = "RoadAnalyser/0.1 (+https://test.unseeyou.com; contact@unseeyou.com)"
+
     try:
-        response = requests.post(overpass_url, data={"data": query})
+        response = requests.post(overpass_url, data={"data": query}, headers={"User-Agent": user_agent})
         data = response.json()
     except Exception as e:
         app.logger.exception(e)
         print(response.content)
-        return []
+        return set()
+
+    print(data)
+    if "<html>" in response.text:
+        return set()
+
+    print(response.content)
+    print(data)
 
     # First element is closest element
-    tags = data["elements"][0].get("tags", {})
+    try:
+        tags = data["elements"][0].get("tags", {})
+    except IndexError:
+        app.logger.exception("No tags found")
+        return set()
 
     highway_type = tags.get("highway", "").casefold()
     surface = tags.get("surface", "").casefold()
